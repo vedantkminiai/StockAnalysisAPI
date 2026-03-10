@@ -34,6 +34,24 @@ def get_stock_price(ticker: str):
     stock = yf.Ticker(ticker)
     return stock.history()['Close'].iloc[-1]
 
+@tool('get_historical_stock_price', description='A function that returns the current stock price over time based on a ticker symbol and a start and end date')
+def get_historical_stock_price(ticker: str, start_date: str, end_date: str):
+    print('get_historical_stock_price tool is being used')
+    stock = yf.Ticker(ticker)
+    return stock.history(start=start_date, end=end_date).to_dict()
+
+@tool('get_balance_sheet', description='A function that returns the balance sheet based on a ticker symbol')
+def get_balance_sheet(ticker: str, year: int):
+    print('get_balance_sheet tool is being used')
+    stock = yf.Ticker(ticker)
+    return stock.balance_sheet(year=year).to_dict()
+
+@tool('get_stock_news', description='A function that returns news based on a ticker symbol')
+def get_stock_news(ticker: str):
+    print('get_stock_news tool is being used')
+    stock = yf.Ticker(ticker)
+    return stock.news
+
 #our agent
 agent = create_agent(
     model = model,
