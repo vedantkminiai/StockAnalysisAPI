@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
@@ -21,7 +22,7 @@ app = FastAPI()
 #Using gpt-5 but taking from thesis api
 model = ChatOpenAI(
     model = 'c1/openai/gpt-5/v-20250930',
-    base_url = 'https://api.thesys.dev/v1/embed/'
+    base_url = 'https://api.thesys.dev/v1/embed/',
 )
 
 checkpointer = InMemorySaver()
@@ -41,13 +42,13 @@ class PromptObject(BaseModel):
 
 class RequestObject(BaseModel):
     prompt: PromptObject
-    threadID: str
+    threadId: str
     responseId: str
 
 ### will send this type of request to this backend endpoint
 @app.post('/api/chat')
 async def chat(request: RequestObject):
-    config = {'configurable': {'threadID': request.threadId}}
+    config = {'configurable': {'thread_id': request.threadId}}
    
     #generates our response
     def generate():
@@ -61,12 +62,12 @@ async def chat(request: RequestObject):
         ):
             yield token.content
 
-        #streamlines message after it has been generated
-        return StreamingResponse(generate(), media_type='text/event-stream',
-                                 headers={
-                                    'Cache-Control': 'no-cache, no-transform',
-                                    'Connected': 'keep-alive',
-                                 })
+    #streamlines message after it has been generated
+    return StreamingResponse(generate(), media_type='text/event-stream',
+                                headers={
+                                'Cache-Control': 'no-cache, no-transform',
+                                'Connected': 'keep-alive',
+                                })
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8888)
