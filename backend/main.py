@@ -27,6 +27,13 @@ model = ChatOpenAI(
 
 checkpointer = InMemorySaver()
 
+
+@tool('get_stock_price', description='A function that returns the current stock price based on a ticker')
+def get_stock_price(ticker: str):
+    print('get stock_price tool is being used')
+    stock = yf.Ticker(ticker)
+    return stock.history()['Close'].iloc[-1]
+
 #our agent
 agent = create_agent(
     model = model,
