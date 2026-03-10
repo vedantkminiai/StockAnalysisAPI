@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
 from langchain.agents import create_agent
-from langchain.tools import tools
+from langchain.tools import tool
 from langchain.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import InMemorySaver
@@ -69,7 +69,7 @@ async def chat(request: RequestObject):
                                  })
 
 if __name__ == '__main__':
-    uvicorn.run(app, hody='0.0.0.0', port=8888)
+    uvicorn.run(app, host='0.0.0.0', port=8888)
 
 
 
