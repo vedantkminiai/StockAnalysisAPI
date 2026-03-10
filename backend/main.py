@@ -44,7 +44,7 @@ def get_historical_stock_price(ticker: str, start_date: str, end_date: str):
 def get_balance_sheet(ticker: str, year: int):
     print('get_balance_sheet tool is being used')
     stock = yf.Ticker(ticker)
-    return stock.balance_sheet(year=year).to_dict()
+    return stock.balance_sheet
 
 @tool('get_stock_news', description='A function that returns news based on a ticker symbol')
 def get_stock_news(ticker: str):
@@ -56,9 +56,8 @@ def get_stock_news(ticker: str):
 agent = create_agent(
     model = model,
     checkpointer = checkpointer,
-    tools = []
+    tools = [get_stock_price, get_historical_stock_price, get_balance_sheet, get_stock_news],
 )
-
 
 class PromptObject(BaseModel):
     content: str
